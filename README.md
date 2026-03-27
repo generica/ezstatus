@@ -1,0 +1,2 @@
+# ezstatus
+Simple cluster status
