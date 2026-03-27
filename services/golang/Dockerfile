@@ -10,8 +10,7 @@ COPY go.mod ./
 COPY cmd ./cmd
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /out/server ./cmd/server
 
-ARG TARGETPLATFORM
-FROM --platform=$TARGETPLATFORM alpine:3.20
+FROM alpine:3.20
 RUN apk add --no-cache ca-certificates
 WORKDIR /app
 COPY --from=build /out/server ./
