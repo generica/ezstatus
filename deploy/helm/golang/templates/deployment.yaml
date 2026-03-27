@@ -18,6 +18,8 @@ spec:
       labels:
         {{- include "ezstatus-golang.selectorLabels" . | nindent 8 }}
     spec:
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
       containers:
         - name: server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
