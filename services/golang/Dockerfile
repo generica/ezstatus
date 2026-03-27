@@ -1,12 +1,17 @@
 # syntax=docker/dockerfile:1
+# Cross-compile for aarch64 hosts, e.g.:
+#   docker buildx build --platform linux/arm64 -t ezstatus-golang:latest .
 
-FROM golang:1.26-alpine AS build
+FROM --platform=$BUILDPLATFORM golang:1.26-alpine AS build
+ARG TARGETOS
+ARG TARGETARCH
 WORKDIR /src
 COPY go.mod ./
 COPY cmd ./cmd
-RUN CGO_ENABLED=0 go build -o /out/server ./cmd/server
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /out/server ./cmd/server
 
-FROM alpine:3.20
+ARG TARGETPLATFORM
+FROM --platform=$TARGETPLATFORM alpine:3.20
 RUN apk add --no-cache ca-certificates
 WORKDIR /app
 COPY --from=build /out/server ./

@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1
+# Build for aarch64 hosts (pulls arm64 base), e.g.:
+#   docker buildx build --platform linux/arm64 -t ezstatus-python:latest .
 
-FROM python:3.12-slim-bookworm AS runtime
+ARG TARGETPLATFORM
+FROM --platform=$TARGETPLATFORM python:3.12-slim-bookworm AS runtime
 WORKDIR /app
 
 RUN useradd --create-home --uid 65532 --shell /usr/sbin/nologin appuser
